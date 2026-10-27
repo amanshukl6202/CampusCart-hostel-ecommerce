@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusCart — Hostel Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="go('home')">Campus<span>Cart</span></div>
+  <div class="nav-links">
+    <a onclick="go('home')" id="nl-home" class="active">Home</a>
+    <a onclick="go('shop')" id="nl-shop">Shop</a>
+    <a onclick="go('cart')" id="nl-cart">Cart</a>
+  </div>
+  <div class="nav-right">
+    <button class="auth-btn" onclick="openAuth()" id="auth-btn">Sign In</button>
+    <button class="cart-btn" onclick="go('cart')">
+      🛒 Cart <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-badge"><span></span> Now serving 12 hostels near you</div>
+    <h1 class="hero-title">
+      Everything your<br>
+      <span class="accent">hostel room</span> needs<br>
+      <span class="dim">delivered fast.</span>
+    </h1>
+    <p class="hero-sub">Tiffin, snacks, stationery, toiletries — curated for hostel life. No more 11pm market runs.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="go('shop')">Shop Now →</button>
+      <button class="btn-ghost" onclick="go('shop')">Browse Catalogue</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-num">48+</div><div class="stat-label">Products</div></div>
+      <div class="stat-item"><div class="stat-num">₹49</div><div class="stat-label">Starts at</div></div>
+      <div class="stat-item"><div class="stat-num">30min</div><div class="stat-label">Delivery</div></div>
+      <div class="stat-item"><div class="stat-num">4.8★</div><div class="stat-label">Rated</div></div>
+    </div>
+    <div class="cat-scroll">
+      <div class="cat-pill" onclick="quickShop('food')">🍱 Tiffin &amp; Food</div>
+      <div class="cat-pill" onclick="quickShop('snacks')">🍜 Snacks</div>
+      <div class="cat-pill" onclick="quickShop('study')">📚 Study</div>
+      <div class="cat-pill" onclick="quickShop('room')">🛏️ Room Essentials</div>
+      <div class="cat-pill" onclick="quickShop('hygiene')">🧼 Hygiene</div>
+      <div class="cat-pill" onclick="quickShop('laundry')">👕 Laundry</div>
+      <div class="cat-pill" onclick="quickShop('gadgets')">🔌 Gadgets</div>
+    </div>
+  </section>
+</div>
+
+<!-- SHOP -->
+<div class="page" id="page-shop">
+  <div class="shop-header">
+    <div>
+      <div class="page-eyebrow">Hostel Store</div>
+      <h2 class="page-title">All Products</h2>
+    </div>
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-in" placeholder="Search products…" oninput="renderProducts()">
+    </div>
+  </div>
+  <div class="filters">
+    <span class="f-label">Category:</span>
+    <button class="f-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="f-btn" onclick="setFilter('food',this)">🍱 Food</button>
+    <button class="f-btn" onclick="setFilter('snacks',this)">🍜 Snacks</button>
+    <button class="f-btn" onclick="setFilter('study',this)">📚 Study</button>
+    <button class="f-btn" onclick="setFilter('room',this)">🛏️ Room</button>
+    <button class="f-btn" onclick="setFilter('hygiene',this)">🧼 Hygiene</button>
+    <button class="f-btn" onclick="setFilter('laundry',this)">👕 Laundry</button>
+    <button class="f-btn" onclick="setFilter('gadgets',this)">🔌 Gadgets</button>
+    <select class="sort-sel" id="sort-sel" onchange="renderProducts()">
+      <option value="">Sort: Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+    </select>
+  </div>
+  <div class="grid" id="prod-grid"></div>
+  <footer>© 2025 <span>CampusCart</span> — Built for hostel students 🎓</footer>
+</div>
+
+<!-- CART -->
+<div class="page" id="page-cart">
+  <div class="cart-header">
+    <div class="page-eyebrow">Your Selection</div>
+    <h2 class="page-title">Shopping Cart</h2>
+  </div>
+  <div class="cart-wrap">
+    <div id="cart-items"></div>
+    <div>
+      <div class="summary">
+        <div class="s-title">Order Summary</div>
+        <div class="s-row"><span>Subtotal</span><span id="s-sub">₹0</span></div>
+        <div class="s-row"><span>Delivery</span><span id="s-del">₹0</span></div>
+        <div class="s-row"><span>Discount</span><span id="s-disc" style="color:var(--green)">−₹0</span></div>
+        <div class="s-row total"><span>Total</span><span class="val" id="s-tot">₹0</span></div>
+        <div class="coupon-row">
+          <input class="coupon-in" id="coupon-in" placeholder="Coupon code" type="text">
+          <button class="coupon-apply" onclick="applyCoupon()">Apply</button>
+        </div>
+        <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
+        <div class="secure-note">🔒 Safe &amp; encrypted checkout</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('auth-modal')">✕</button>
+    <div class="m-logo">CampusCart</div>
+    <div class="m-sub">Your hostel shopping account</div>
+    <div class="tab-row">
+      <button class="tab active" onclick="switchTab('login')" id="t-login">Sign In</button>
+      <button class="tab" onclick="switchTab('register')" id="t-reg">Register</button>
+    </div>
+    <div id="a-err" class="m-err"></div>
+    <div id="a-ok" class="m-ok"></div>
+    <div id="p-login">
+      <div class="fg"><label class="f-label">Email</label><input class="f-input" id="l-email" type="email" placeholder="you@example.com"></div>
+      <div class="fg"><label class="f-label">Password</label><input class="f-input" id="l-pass" type="password" placeholder="••••••••"></div>
+      <button class="m-submit" onclick="doLogin()">Sign In →</button>
+    </div>
+    <div id="p-reg" style="display:none">
+      <div class="f-row">
+        <div class="fg"><label class="f-label">First Name</label><input class="f-input" id="r-fn" placeholder="Rahul"></div>
+        <div class="fg"><label class="f-label">Last Name</label><input class="f-input" id="r-ln" placeholder="Singh"></div>
+      </div>
+      <div class="fg"><label class="f-label">Email</label><input class="f-input" id="r-email" type="email" placeholder="you@example.com"></div>
+      <div class="fg"><label class="f-label">Password</label><input class="f-input" id="r-pass" type="password" placeholder="Min. 6 chars"></div>
+      <button class="m-submit" onclick="doReg()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay" id="co-modal">
+  <div class="modal co-modal">
+    <button class="m-close" onclick="closeModal('co-modal')">✕</button>
+    <div class="m-logo" style="margin-bottom:1.3rem">Checkout</div>
+    <div class="co-steps">
+      <div class="s-step active" id="cs1"><div class="s-num">1</div><div class="s-lbl">Delivery</div></div>
+      <div class="s-line"></div>
+      <div class="s-step" id="cs2"><div class="s-num">2</div><div class="s-lbl">Payment</div></div>
+      <div class="s-line"></div>
+      <div class="s-step" id="cs3"><div class="s-num">3</div><div class="s-lbl">Confirm</div></div>
+    </div>
+    <!-- Step 1 -->
+    <div class="sp active" id="cp1">
+      <div class="f-row">
+        <div class="fg"><label class="f-label">First Name</label><input class="f-input" id="d-fn" placeholder="Rahul"></div>
+        <div class="fg"><label class="f-label">Last Name</label><input class="f-input" id="d-ln" placeholder="Singh"></div>
+      </div>
+      <div class="fg"><label class="f-label">Hostel / Address</label><input class="f-input" id="d-addr" placeholder="Hostel 4, Room 210"></div>
+      <div class="f-row">
+        <div class="fg"><label class="f-label">City</label><input class="f-input" id="d-city" placeholder="Kanpur"></div>
+        <div class="fg"><label class="f-label">Pincode</label><input class="f-input" id="d-pin" placeholder="208001"></div>
+      </div>
+      <div class="fg"><label class="f-label">Phone</label><input class="f-input" id="d-ph" placeholder="+91 XXXXX XXXXX"></div>
+      <button class="m-submit" onclick="coStep(2)">Continue to Payment →</button>
+    </div>
+    <!-- Step 2 -->
+    <div class="sp" id="cp2">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;">Select payment method</div>
+      <div class="pay-grid">
+        <div class="pm sel" id="pm-upi" onclick="selPay('upi')"><div class="pm-ic">📱</div>UPI / GPay</div>
+        <div class="pm" id="pm-card" onclick="selPay('card')"><div class="pm-ic">💳</div>Card</div>
+        <div class="pm" id="pm-nb" onclick="selPay('nb')"><div class="pm-ic">🏦</div>Net Banking</div>
+        <div class="pm" id="pm-cod" onclick="selPay('cod')"><div class="pm-ic">💵</div>Cash on Delivery</div>
+      </div>
+      <div id="upi-p"><div class="fg"><label class="f-label">UPI ID</label><input class="f-input" id="upi-id" placeholder="rahul@upi"></div></div>
+      <div id="card-p" style="display:none">
+        <div class="fg"><label class="f-label">Card Number</label><input class="f-input" id="c-num" placeholder="•••• •••• •••• ••••" maxlength="19"></div>
+        <div class="f-row">
+          <div class="fg"><label class="f-label">Expiry</label><input class="f-input" id="c-exp" placeholder="MM/YY"></div>
+          <div class="fg"><label class="f-label">CVV</label><input class="f-input" id="c-cvv" placeholder="•••" maxlength="3"></div>
+        </div>
+      </div>
+      <button class="m-submit" onclick="coStep(3)">Review Order →</button>
+    </div>
+    <!-- Step 3 -->
+    <div class="sp" id="cp3">
+      <div id="o-review" style="background:var(--surface2);border-radius:9px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--muted);line-height:1.8;"></div>
+      <button class="m-submit" onclick="placeOrder()" style="background:var(--green);color:#000;">✓ Place Order</button>
+    </div>
+    <!-- Success -->
+    <div class="sp" id="cp-ok">
+      <div class="o-success">
+        <div class="ok-ic">🎉</div>
+        <div class="ok-title">Order Placed!</div>
+        <div class="order-id" id="oid"></div>
+        <div class="ok-sub">Your order is confirmed and will be delivered within 30–60 minutes. Check your email for details.</div>
+        <button class="m-submit" style="margin-top:1.2rem" onclick="afterOrder()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
